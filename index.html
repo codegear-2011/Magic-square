@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Birthday Magic Square</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+h1 {
+  background-color: #ffa500;
+}
+    h2 {
+      background-color: #234d20;
+      margin-bottom: 10px;
+    }
+    select {
+      padding: 5px;
+      margin: 5px;
+      font-size: 16px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 60px);
+      gap: 5px;
+      justify-content: center;
+      margin: 20px auto;
+    }
+    .cell {
+      width: 60px;
+      height: 60px;
+      line-height: 60px;
+      border: 1px solid #333;
+      font-size: 18px;
+      background-color: #f2f2f2;
+      opacity: 0;
+      transform: scale(0.8);
+      animation: fadeInScale 0.4s forwards;
+    }
+    @keyframes fadeInScale {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    .sum-box {
+      display: inline-block;
+      width: 60px;
+      height: 60px;
+      line-height: 60px;
+      font-size: 20px;
+      border: 2px solid #333;
+      margin: 20px auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>DEV:CODE GEAR</h1>
+  <h2>Make A 4x4 Magic Square From Your Birthday!</h2>
+  <h3>BY:Srinivasa Ramanujan Aiyangar</h3>
+  <p>Enter your birthday</p>
+  <div>
+    <select id="day"></select>
+    <select id="month"></select>
+    <select id="year"></select>
+  </div>
+  <div class="grid" id="magicSquare"></div>
+  <p>The sum of every row, column, diagonal, and most 2x2 blocks is</p>
+  <div class="sum-box" id="magicSum">-</div>
+  <script>
+    const daySelect = document.getElementById('day');
+    const monthSelect = document.getElementById('month');
+    const yearSelect = document.getElementById('year');
+    const grid = document.getElementById('magicSquare');
+    const sumBox = document.getElementById('magicSum');
+
+    for (let i = 1; i <= 31; i++) {
+      const opt = document.createElement("option");
+      opt.value = opt.text = i;
+      daySelect.add(opt);
+    }
+    for (let i = 1; i <= 12; i++) {
+      const opt = document.createElement("option");
+      opt.value = opt.text = i;
+      monthSelect.add(opt);
+    }
+    for (let i = 1900; i <= 2025; i++) {
+      const opt = document.createElement("option");
+      opt.value = opt.text = i;
+      yearSelect.add(opt);
+    }
+
+    function generateMagicSquare() {
+      const day = parseInt(daySelect.value);
+      const month = parseInt(monthSelect.value);
+      const year = parseInt(yearSelect.value);
+      const y1 = Math.floor(year / 100);
+      const y2 = year % 100;
+
+      const row1 = [day, month, y1, y2];
+      const row2 = [day + 1, month - 1, y1 - 1, y2 + 1];
+      const row3 = [day - 1, month + 1, y1 + 1, y2 - 1];
+      const row4 = [day + 2, month + 2, y1 - 2, y2 - 2];
+
+      const allRows = [row1, row2, row3, row4];
+
+      grid.innerHTML = '';
+      allRows.forEach(row => {
+        row.forEach(val => {
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          cell.textContent = val;
+          grid.appendChild(cell);
+        });
+      });
+
+      const magicSum = row1.reduce((a, b) => a + b, 0);
+      sumBox.textContent = magicSum;
+    }
+
+    daySelect.value = 15;
+    monthSelect.value = 6;
+    yearSelect.value = 1980;
+    generateMagicSquare();
+
+    daySelect.onchange = monthSelect.onchange = yearSelect.onchange = generateMagicSquare;
+  </script>
+</body>
+</html>
